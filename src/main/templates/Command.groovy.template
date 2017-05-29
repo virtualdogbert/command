@@ -1,0 +1,9 @@
+package ${packageName}
+
+class ${className}Command {
+
+    
+    static constraints = {
+
+    }
+}
