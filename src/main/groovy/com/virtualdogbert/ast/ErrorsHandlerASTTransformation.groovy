@@ -27,15 +27,12 @@ import com.virtualdogbert.CommandArtefactHandler
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.*
-import org.codehaus.groovy.ast.stmt.BlockStatement
-import org.codehaus.groovy.ast.stmt.ExpressionStatement
-import org.codehaus.groovy.ast.stmt.Statement
+import org.codehaus.groovy.ast.stmt.*
 import org.codehaus.groovy.classgen.VariableScopeVisitor
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.AbstractASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
-
 /**
  * The annotation enforce takes up to 3 closures can injects a call to the enforce method of the enforcerService at the
  * beginning of the method.
@@ -133,6 +130,7 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
     private Statement createErrorsHandlerCall(String handler, ListExpression params) {
         Expression thisExpression = new VariableExpression("this")
         Expression call = new MethodCallExpression(thisExpression, handler ?: 'errorsHandler', new ArgumentListExpression(params))
-        return new ExpressionStatement(call)
+        BooleanExpression booleanExpression = new BooleanExpression(call)
+        return new IfStatement(booleanExpression, new ReturnStatement(new ConstantExpression(null)), new EmptyStatement())
     }
 }

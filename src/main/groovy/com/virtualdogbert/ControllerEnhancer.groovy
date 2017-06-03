@@ -21,7 +21,7 @@ import org.grails.core.artefact.ControllerArtefactHandler
 
 @Enhances(ControllerArtefactHandler.TYPE)
 trait ControllerEnhancer {
-    void errorsHandler(List commandObjects) {
+    boolean errorsHandler(List commandObjects) {
         List errors = commandObjects.inject([]) { result, commandObject ->
 
             if (commandObject.hasErrors()) {
@@ -32,6 +32,11 @@ trait ControllerEnhancer {
 
         } as List
 
-        render errors[0]
+        if (errors) {
+            render errors
+            return true
+        }
+
+        return false
     }
 }
