@@ -24,29 +24,32 @@ import java.util.regex.Pattern
 
 import static org.grails.io.support.GrailsResourceUtils.GRAILS_APP_DIR
 import static org.grails.io.support.GrailsResourceUtils.REGEX_FILE_SEPARATOR
+
 /**
  * Grails artifact handler for command classes.
  *
  */
 public class CommandArtefactHandler extends ArtefactHandlerAdapter {
 
-    static final String   TYPE                 = "Command"
-    public static Pattern COMMAND_PATH_PATTERN = Pattern.compile(".+" + REGEX_FILE_SEPARATOR + GRAILS_APP_DIR + REGEX_FILE_SEPARATOR + "command" + REGEX_FILE_SEPARATOR + "(.+)\\.(groovy)");
+    static final        String  TYPE                 = "Command"
+    public static final String  PLUGIN_NAME          = "command"
+    public
+    static              Pattern COMMAND_PATH_PATTERN = Pattern.compile(".+" + REGEX_FILE_SEPARATOR + GRAILS_APP_DIR + REGEX_FILE_SEPARATOR + "command" + REGEX_FILE_SEPARATOR + "(.+)\\.(groovy)");
 
     public CommandArtefactHandler() {
         super(TYPE, GrailsCommandClass.class, DefaultGrailsCommandClass.class, TYPE)
     }
 
     boolean isArtefact(ClassNode classNode) {
-        if(classNode == null ||
-           !isValidArtefactClassNode(classNode, classNode.getModifiers()) ||
-           !classNode.getName().endsWith(DefaultGrailsCommandClass.COMMAND)) {
+        if (classNode == null ||
+                !isValidArtefactClassNode(classNode, classNode.getModifiers()) ||
+                !classNode.getName().endsWith(DefaultGrailsCommandClass.COMMAND)) {
             return false
         }
 
         URL url = GrailsASTUtils.getSourceUrl(classNode)
 
-        url &&  COMMAND_PATH_PATTERN.matcher(url.getFile()).find()
+        url && COMMAND_PATH_PATTERN.matcher(url.getFile()).find()
     }
 
     boolean isArtefactClass(Class clazz) {
@@ -57,5 +60,10 @@ public class CommandArtefactHandler extends ArtefactHandlerAdapter {
 
         return true
 
+    }
+
+    @Override
+    public String getPluginName() {
+        return PLUGIN_NAME;
     }
 }

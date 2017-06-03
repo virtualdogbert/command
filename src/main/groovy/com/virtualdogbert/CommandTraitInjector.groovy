@@ -23,7 +23,7 @@ class CommandTraitInjector implements TraitInjector {
 
     @Override
     Class getTrait() {
-        Command
+        CommandEnhanced
     }
 
     @Override

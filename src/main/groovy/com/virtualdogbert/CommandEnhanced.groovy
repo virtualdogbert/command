@@ -15,16 +15,13 @@
  */
 package com.virtualdogbert
 
-import grails.core.GrailsApplication
-import grails.core.support.GrailsApplicationAware
 import grails.validation.Validateable
 import groovy.transform.CompileStatic
 
 @CompileStatic
-trait Command implements GrailsApplicationAware, Validateable {
+trait CommandEnhanced implements Validateable {
     private static GrailsCommandClass internalCommandArtefact
 
-    GrailsApplication grailsApplication
 
     public static setGrailsCommandClass(GrailsCommandClass gcc) {
         internalCommandArtefact = gcc
