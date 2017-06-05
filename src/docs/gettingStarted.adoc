@@ -1,0 +1,25 @@
+== Getting Started
+
+1.In grails 3 add the following dependency to your gradle.build:
+----
+compile "org.grails.plugins:command:1.0.0"
+----
+
+2.Run grails create-command:
+----
+grails create-command >package>.<commandName>
+----
+
+or for the default package
+----
+grails create-command <commandName>
+----
+
+3.If this is the first command you've created run the refresh dependencies in Intellij, This will add the command
+folder to the source set. Or you can manually add the folder to the source set, by right clicking on the folder
+selecting "Mark Directory as" and selecting, "Sources Root". In a future release I'll look for a better way to
+automate, and eliminate this step.
+
+=== Example application
+
+https://github.com/virtualdogbert/test-command[GitHub testCommand]

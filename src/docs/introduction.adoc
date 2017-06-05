@@ -1,0 +1,5 @@
+== Introduction
+
+The Command Plugin, gives Grails a convention for command objects, and makes them a grails Artefact. It also
+adds an AST Transform call @ErrorsHandler to eliminate some of the boilerplate of dealing with errors from
+command objects.

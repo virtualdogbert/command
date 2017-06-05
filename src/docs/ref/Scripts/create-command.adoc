@@ -1,0 +1,19 @@
+= Create-Command
+
+== Purpose
+
+Creates a new command object in the top level grails-app/command folder. These commands can be used with the @ErrorsHandler
+AST transform.
+
+The general
+format is:
+
+----
+grails create-command >package>.<commandName>
+----
+
+or for the default package
+----
+grails create-command <commandName>
+----
+

@@ -1,0 +1,84 @@
+== The ErrorsHandler AST Transforms
+
+The ErrorsHandler AST(@ErrorHandler()) transform Enforce injects a call to the default, injected by the plugin(see bellow).
+The ErrorsHandler can either be applied at the action level of a controller or at the class level. If
+the ErrorsHandler is applied at the class level, it will be injected to each action, but, applying it at the
+action level will override. The ErrorHandler can also be passed an optional String name of an alternative
+ErrorHandler. The ErrorHandler will not be applied to private methods or Method annotated with @SkipErrorsHandler.
+
+===== Example Usage:
+[source,groovy]
+----
+    package test.command
+
+    import com.virtualdogbert.ast.ErrorsHandler
+    import grails.converters.JSON
+    @ErrorsHandler
+    class TestController {
+
+        def index(TestCommand test) {
+            //some controller code
+        }
+
+        @ErrorsHandler(handler = 'someOtherErrorHandler') //over rides the default.
+        def list(TestCommand test) {
+            //some controller code
+        }
+
+        @SkipErrorsHandler //Skips the error handler injection from the class annotation.
+        def list(TestCommand test) {
+            //some controller code
+        }
+
+        //Your error handler
+        private boolean someOtherErrorHandler(List commandObjects) {
+            List errors = commandObjects.inject([]) { result, commandObject ->
+
+                if (commandObject.hasErrors()) {
+                    result + (commandObject.errors as JSON)
+                } else {
+                    result
+                }
+
+            } as List
+
+            if (errors) {
+                //Do something
+                return true
+            }
+            //possibly do something else
+            return false
+        }
+    }
+----
+
+
+===== Code injected by the ErrorHandler, into the actions:
+[source,groovy]
+----
+    if(errorsHandler( [<every commandObject in the actions parameter list>] )){ return null }
+----
+
+===== Default Error Handler injected into all controllers:
+[source,groovy]
+----
+    boolean errorsHandler(List commandObjects) {
+        List errors = commandObjects.inject([]) { result, commandObject ->
+
+            if (commandObject.hasErrors()) {
+                result + (commandObject.errors as JSON)
+            } else {
+                result
+            }
+
+        } as List
+
+        if (errors) {
+            render errors
+            return true
+        }
+
+        return false
+    }
+----
+
