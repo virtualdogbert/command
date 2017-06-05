@@ -50,7 +50,7 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
 
             MethodNode methodNode = (MethodNode) nodes[1]
             AnnotationNode annotationNode = methodNode.getAnnotations(beforeNode)[0]
-            String handlerName = annotationNode.members.handler
+            String handlerName = annotationNode?.getMember('handler')?.getText()
             ListExpression params = new ListExpression(getParamsList(methodNode.parameters.toList()))
             applyToMethod(methodNode, sourceUnit, handlerName, params)
 
