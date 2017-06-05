@@ -88,9 +88,14 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
      * @param fromClass If the annotation comes from the class level
      */
     private void applyToMethod(MethodNode methodNode, SourceUnit sourceUnit, String handler, ListExpression params, boolean fromClass = false) {
+        if(methodNode.private){
+            return
+        }
 
-        ClassNode beforeNode = new ClassNode(ErrorsHandler.class)
-        if (fromClass && methodNode.getAnnotations(beforeNode)[0]) {
+        ClassNode ErrorHandlerNode = new ClassNode(ErrorsHandler.class)
+        ClassNode SkipErrorsHandlerNode = new ClassNode(SkipErrorsHandler.class)
+        if (fromClass &&
+                (methodNode.getAnnotations(ErrorHandlerNode)[0] || methodNode.getAnnotations(SkipErrorsHandlerNode)[0])) {
             return
             //If the annotation is from the class level, but the method node has it's own @ErrorsHandler annotation don't apply the class level logic.
         }
