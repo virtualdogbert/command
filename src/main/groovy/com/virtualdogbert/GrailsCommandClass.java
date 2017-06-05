@@ -21,7 +21,4 @@ import grails.core.GrailsClass;
 /**
  * Represents a command class in Grails.
  */
-public interface GrailsCommandClass extends GrailsClass {
-
-
-}
+public interface GrailsCommandClass extends GrailsClass {}

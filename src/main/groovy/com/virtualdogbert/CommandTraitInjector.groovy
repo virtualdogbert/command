@@ -18,6 +18,9 @@ package com.virtualdogbert
 import grails.compiler.traits.TraitInjector
 import groovy.transform.CompileStatic
 
+/**
+ * Injects the Command trait on the Command objects. I'm hoping this will eventually replace the explicit trait in the template.
+ */
 @CompileStatic
 class CommandTraitInjector implements TraitInjector {
 

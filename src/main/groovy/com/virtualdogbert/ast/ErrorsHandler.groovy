@@ -16,9 +16,6 @@
  *  specific language governing permissions and limitations
  *  under the License.
  *
- * Some of the setup is derived from the fllowing grails plugings(Appache Licence)
- * https://github.com/groovy/groovy-core/blob/4993b10737881b2491c2daa01526fb15dd889ac5/src/main/org/codehaus/groovy/transform/NewifyASTTransformation.java
- * https://github.com/grails-plugins/grails-redis/tree/master/src/main/groovy/grails/plugins/redis
  */
 
 package com.virtualdogbert.ast
@@ -31,23 +28,8 @@ import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
 /**
- * The annotation enforce takes up to 3 closures can injects a call to the enforce method of the enforcerService at the
- * beginning of the method.
- *
- * This can be applied to a method or a class, but the method will take precedence.
- *
- * The first closure is value, just so that the transform can be called without naming the parameter.
- * If your specifying two or more closures you will have to specify there names in the annotation call.
- * Examples:
- * @ErrorsHandler ( { true})
- * @ErrorsHandler ( value = { true }, failure = { println "nice" })
- * @ErrorsHandler ( value = { true }, failure = { println "nice" }, success = { println "not nice" })
- * @ErrorsHandler ( value = { false }, failure = { println "not nice" }, success = { println "nice" })
- *
- * parameters
- * value is the predicate for the enforce service, named value so that you don't have to name it
- * failure is the code to run if the predicate returns false, if not specified, the default for the enforcerService is used.
- * success the code to run if the predicate returns true, if not specified, the default for the enforcerService is used.
+ * The annotation injects a call to either the default handler(@see com.virtualdogbert.ControllerEnhancer.#errorsHandler())
+ * or one specified by name using the handler parameter.
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target([ElementType.TYPE, ElementType.METHOD])

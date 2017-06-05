@@ -19,6 +19,10 @@ import grails.artefact.Enhances
 import grails.converters.JSON
 import org.grails.core.artefact.ControllerArtefactHandler
 
+/**
+ * A trait for adding a default errorsHandler for dealing with command errors. Also the AST will  delete to this handler
+ * by default.
+ */
 @Enhances(ControllerArtefactHandler.TYPE)
 trait ControllerEnhancer {
     boolean errorsHandler(List commandObjects) {

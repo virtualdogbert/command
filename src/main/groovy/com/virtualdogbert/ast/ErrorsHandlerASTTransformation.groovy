@@ -34,19 +34,8 @@ import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.AbstractASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 /**
- * The annotation enforce takes up to 3 closures can injects a call to the enforce method of the enforcerService at the
- * beginning of the method.
- *
- * This can be applied to a method or a class, but the method will take precedence.
- *
- * The first closure is value, just so that the transform can be called without naming the parameter.
- * If your specifying two or more closures you will have to specify there names in the annotation call.
- * Examples:
- * @ErrorsHandler ( { true } )
- * @ErrorsHandler ( value = { true } , failure = { println " nice " } )
- * @ErrorsHandler ( value = { true } , failure = { println " nice " } , success = { println " not nice " } )
- * @ErrorsHandler ( value = { false } , failure = { println " not nice " } , success = { println " nice " } )
- *
+ * The annotation injects a call to either the default handler(@see com.virtualdogbert.ControllerEnhancer.#errorsHandler())
+ * or one specified by name using the handler parameter.
  */
 @CompileStatic
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
@@ -69,7 +58,7 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
 
             ClassNode classNode = (ClassNode) nodes[1]
             AnnotationNode annotationNode = classNode.getAnnotations(beforeNode)[0]
-            String handlerName = annotationNode.members.handler
+            String handlerName = annotationNode?.getMember('handler')?.getText()
 
             classNode.methods.each { MethodNode methodNode ->
                 ListExpression params = new ListExpression(getParamsList(methodNode.parameters.toList()))
@@ -80,7 +69,7 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
     }
 
     /**
-     * This applies the enforce logic to a method node.
+     * This applies the error handing logic to a method node.
      *
      * @param methodNode The method node to inject the enforce logic
      * @param sourceUnit the source unit which is used for fixing the variable scope
@@ -111,10 +100,11 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
     }
 
     /**
-     *  extracts the closure parameters from the members map, into a list in the order that the enforcerService's enforce method expects
+     *  Collects the params from the method, that are of the command artefact type.
      *
-     * @param members The map of members / parameters
-     * @return A list of the closure parameters passed to the annotation
+     * @param members The map of members / parameters.
+     *
+     * @return A list of parameters that will be passed to the error handler.
      */
     private List<Expression> getParamsList(List<Parameter> methodParams) {
         List<Expression> parameterExpressionList = []
@@ -127,10 +117,12 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
     }
 
     /**
-     *  Creates the call to the enforcer service, to be injected, using the list of parameters generated from the get ParamsList
+     *  Creates the call to the error handler, either the default injected, or the one passed in the handler parameter,
+     *  using the list of parameters generated from the get ParamsList
      *
-     * @param params the list of closure parameters to pass to the enforce method of the enforcer service
-     * @return the statement created for injecting the call to the enforce method of the enforcerService
+     * @param params A list of command artefact parameters that will be passed to the error handler.
+     *
+     * @return the statement created for injecting the call to the error handler
      */
     private Statement createErrorsHandlerCall(String handler, ListExpression params) {
         Expression thisExpression = new VariableExpression("this")
