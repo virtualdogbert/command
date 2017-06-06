@@ -113,7 +113,27 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
                 parameterExpressionList << (new VariableExpression(parameter))
             }
         }
+
+        parameterExpressionList << getControllerErrors()
+
         return parameterExpressionList
+    }
+
+    /**
+     * Builds the expression to get the errors from the controller itself
+     *
+     * @return [errors: getErrors(), hasErrors: {hasErrors()}]
+     */
+    private MapExpression getControllerErrors() {
+        Expression thisExpression = new VariableExpression("this")
+        Expression errorsCall = new MethodCallExpression(thisExpression, 'getErrors', new ArgumentListExpression())
+        Expression hasErrorsCall = new MethodCallExpression(thisExpression, 'hasErrors', new ArgumentListExpression())
+        Parameter[] parameters = [] as Parameter[]
+        ClosureExpression hasErrorsClosure = new ClosureExpression(parameters, new ReturnStatement(hasErrorsCall))
+        MapExpression controllerErrorsMap = new MapExpression()
+        controllerErrorsMap.addMapEntryExpression(new MapEntryExpression(new ConstantExpression('hasErrors'), hasErrorsClosure))
+        controllerErrorsMap.addMapEntryExpression(new MapEntryExpression(new ConstantExpression('errors'), errorsCall))
+        return controllerErrorsMap
     }
 
     /**

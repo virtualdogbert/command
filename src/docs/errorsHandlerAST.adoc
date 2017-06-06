@@ -6,6 +6,13 @@ the ErrorsHandler is applied at the class level, it will be injected to each act
 action level will override. The ErrorHandler can also be passed an optional String name of an alternative
 ErrorHandler. The ErrorHandler will not be applied to private methods or Method annotated with @SkipErrorsHandler.
 
+If you use parameter outside of a command object, and those parameters have binding errors, those will be included in the
+list sent to the error handler, but for each parameter you will have to include an entry in your i18n message bundle for
+the parameter like:
+----
+params.<Your parameter name here>.conversion.error = Your error massage for <Your parameter name> had an error binding.
+----
+
 ===== Example Usage:
 [source,groovy]
 ----
