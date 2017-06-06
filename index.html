@@ -522,6 +522,16 @@ the ErrorsHandler is applied at the class level, it will be injected to each act
 action level will override. The ErrorHandler can also be passed an optional String name of an alternative
 ErrorHandler. The ErrorHandler will not be applied to private methods or Method annotated with @SkipErrorsHandler.</p>
 </div>
+<div class="paragraph">
+<p>If you use parameter outside of a command object, and those parameters have binding errors, those will be included in the
+list sent to the error handler, but for each parameter you will have to include an entry in your i18n message bundle for
+the parameter like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>params.&lt;Your parameter name here&gt;.conversion.error = Your error massage for &lt;Your parameter name&gt; had an error binding.</pre>
+</div>
+</div>
 <div class="sect4">
 <h5 id="example-usage">Example Usage:</h5>
 <div class="listingblock">
