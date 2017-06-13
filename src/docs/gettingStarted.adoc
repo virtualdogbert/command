@@ -18,7 +18,7 @@ grails create-command <commandName>
 
 3. If this is the first command you've created, refresh the Gradle build. This will add the command
 folder to the source set. You can manually add the folder to the source set by right clicking on the folder,
-selecting "Mark Directory as" and selecting, "Sources Root". In a future release I'll look for a better way to
+selecting "Mark Directory as", and selecting "Sources Root". In a future release I'll look for a better way to
 automate, and eliminate this step.
 
 === Example application
