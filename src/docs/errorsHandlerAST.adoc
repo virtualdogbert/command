@@ -18,6 +18,7 @@ params.<Your parameter name here>.conversion.error = Your error massage for <You
 
     import com.virtualdogbert.ast.ErrorsHandler
     import grails.converters.JSON
+    
     @ErrorsHandler
     class TestController {
 
