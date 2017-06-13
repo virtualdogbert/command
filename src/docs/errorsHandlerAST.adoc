@@ -1,4 +1,4 @@
-== The ErrorsHandler AST Transforms
+== The @ErrorsHandler Annotation
 
 The @ErrorsHandler annotation injects a call to the default error handling method, which is injected by the plugin.
 The annotation can either be applied to the controller class itself or to individual actions. If
