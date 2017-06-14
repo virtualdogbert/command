@@ -1,0 +1,22 @@
+import com.intellij.patterns.PsiJavaPatterns
+
+def commandContext = context(
+        ctype: PsiJavaPatterns.withName("Command".matches(/.*/))
+)
+
+contributor(commandContext) {
+    def path = ""
+    try {
+        path = psiClass.containingFile.originalFile.virtualFile.path
+    } catch (Exception e) {
+        /*This is to prevent any non Class null matches*/
+    }
+    if (path =~ ".*/*grails-app/command/.*") {
+
+        method(name: 'getErrors', type: 'org.springframework.validation.Errors', params: [:])
+        method(name: 'hasErrors', type: 'java.lang.Boolean', params: [:])
+        method(name: 'clearErrors', type: 'void', params: [:])
+        method(name: 'validate', type: 'java.lang.Boolean', params: [:])
+        method(name: 'validate', type: 'java.lang.Boolean', params: [fieldsToValidate: List])
+    }
+}

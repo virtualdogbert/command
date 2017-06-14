@@ -431,11 +431,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#example-application">3.1. Example application</a></li>
 </ul>
 </li>
-<li><a href="#the-errorshandler-ast-transforms">4. The ErrorsHandler AST Transforms</a>
+<li><a href="#the-errorshandler-annotation">4. The @ErrorsHandler Annotation</a>
 <ul class="sectlevel4">
 <li><a href="#example-usage">Example Usage:</a></li>
-<li><a href="#code-injected-by-the-errorhandler-into-the-actions">Code injected by the ErrorHandler, into the actions:</a></li>
-<li><a href="#default-error-handler-injected-into-all-controllers">Default Error Handler injected into all controllers:</a></li>
+<li><a href="#code-injected-by-the-transformation-into-the-affected-actions">Code injected by the transformation into the affected actions:</a></li>
+<li><a href="#default-error-handler-injected-into-all-controllers">Default error handler injected into all controllers:</a></li>
 </ul>
 </li>
 </ul>
@@ -446,8 +446,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction">1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Command Plugin, gives Grails a convention for command objects, and makes them a grails Artefact. It also
-adds an AST Transform call @ErrorsHandler to eliminate some of the boilerplate of dealing with errors from
+<p>The Command Plugin gives Grails a convention for command objects by adding a new artefact type. It also
+adds an AST transformation to eliminate some of the boilerplate for dealing with errors from
 command objects.</p>
 </div>
 </div>
@@ -457,6 +457,29 @@ command objects.</p>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>1.0.1</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Fixing issues:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/virtualdogbert/command/issues/2">Improvement use respond instead of as JSON</a></p>
+</li>
+<li>
+<p><a href="https://github.com/virtualdogbert/command/issues/1">create-command block built in grails create-command</a></p>
+</li>
+<li>
+<p>James Kleeh contributed some documentation changes.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>1.0</p>
 <div class="ulist">
@@ -474,20 +497,29 @@ command objects.</p>
 <div class="sect1">
 <h2 id="getting-started">3. Getting Started</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>1.In grails 3 add the following dependency to your gradle.build:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add the following dependency:
+.build.gradle</p>
+</li>
+</ol>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>compile "org.grails.plugins:command:1.0.0"</pre>
+<pre>compile "org.grails.plugins:command:1.0.1"</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>2.Run grails create-command:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run grails create-command:</p>
+</li>
+</ol>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>grails create-command &gt;package&gt;.&lt;commandName&gt;</pre>
+<pre>grails create-command-object &lt;package&gt;.&lt;commandName&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -495,14 +527,18 @@ command objects.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>grails create-command &lt;commandName&gt;</pre>
+<pre>grails create-command-object &lt;commandName&gt;</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>3.If this is the first command you&#8217;ve created run the refresh dependencies in Intellij, This will add the command
-folder to the source set. Or you can manually add the folder to the source set, by right clicking on the folder
-selecting "Mark Directory as" and selecting, "Sources Root". In a future release I&#8217;ll look for a better way to
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If this is the first command you&#8217;ve created, refresh the Gradle build. This will add the command
+folder to the source set. You can manually add the folder to the source set by right clicking on the folder,
+selecting "Mark Directory as", and selecting "Sources Root". In a future release I&#8217;ll look for a better way to
 automate, and eliminate this step.</p>
+</li>
+</ol>
 </div>
 <div class="sect2">
 <h3 id="example-application">3.1. Example application</h3>
@@ -513,19 +549,17 @@ automate, and eliminate this step.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="the-errorshandler-ast-transforms">4. The ErrorsHandler AST Transforms</h2>
+<h2 id="the-errorshandler-annotation">4. The @ErrorsHandler Annotation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The ErrorsHandler AST(@ErrorHandler()) transform Enforce injects a call to the default, injected by the plugin(see bellow).
-The ErrorsHandler can either be applied at the action level of a controller or at the class level. If
-the ErrorsHandler is applied at the class level, it will be injected to each action, but, applying it at the
-action level will override. The ErrorHandler can also be passed an optional String name of an alternative
-ErrorHandler. The ErrorHandler will not be applied to private methods or Method annotated with @SkipErrorsHandler.</p>
+<p>The @ErrorsHandler annotation injects a call to the default error handling method, which is injected by the plugin.
+The annotation can either be applied to the controller class itself or to individual actions. If
+the annotation is applied at the class level it will be injected to each action, however applying it at the
+action level will override the class level behavior. The annotation can also be passed an optional name of an alternate method to call. The error handling functionality will not be applied to private methods or methods annotated with @SkipErrorsHandler.</p>
 </div>
 <div class="paragraph">
-<p>If you use parameter outside of a command object, and those parameters have binding errors, those will be included in the
-list sent to the error handler, but for each parameter you will have to include an entry in your i18n message bundle for
-the parameter like:</p>
+<p>If you use parameters outside of a command object, and those parameters have binding errors, those will be included in the
+list sent to the error handler, but for each parameter you will have to include an entry in your i18n message bundle. For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -540,6 +574,7 @@ the parameter like:</p>
 
     import com.virtualdogbert.ast.ErrorsHandler
     import grails.converters.JSON
+
     @ErrorsHandler
     class TestController {
 
@@ -581,7 +616,7 @@ the parameter like:</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="code-injected-by-the-errorhandler-into-the-actions">Code injected by the ErrorHandler, into the actions:</h5>
+<h5 id="code-injected-by-the-transformation-into-the-affected-actions">Code injected by the transformation into the affected actions:</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">    if(errorsHandler( [&lt;every commandObject in the actions parameter list&gt;] )){ return null }</code></pre>
@@ -589,7 +624,7 @@ the parameter like:</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="default-error-handler-injected-into-all-controllers">Default Error Handler injected into all controllers:</h5>
+<h5 id="default-error-handler-injected-into-all-controllers">Default error handler injected into all controllers:</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">    boolean errorsHandler(List commandObjects) {
@@ -618,7 +653,7 @@ the parameter like:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0<br>
+Version 1.0.1<br>
 Last updated 2017-06-04 19:47:10 -04:00
 </div>
 </div>
