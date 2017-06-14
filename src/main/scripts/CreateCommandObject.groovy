@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 description("Creates a new command object") {
-    usage "grails create-command [COMMAND NAME]"
+    usage "grails create-command-object [COMMAND NAME]"
     argument name:'Command Name', description:"The name of the command"
 }
 

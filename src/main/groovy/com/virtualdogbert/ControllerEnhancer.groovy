@@ -16,9 +16,7 @@
 package com.virtualdogbert
 
 import grails.artefact.Enhances
-import grails.converters.JSON
 import org.grails.core.artefact.ControllerArtefactHandler
-
 /**
  * A trait for adding a default errorsHandler for dealing with command errors. Also the AST will  delete to this handler
  * by default.
@@ -29,7 +27,7 @@ trait ControllerEnhancer {
         List errors = commandObjects.inject([]) { result, commandObject ->
 
             if (commandObject.hasErrors()) {
-                result + (commandObject.errors as JSON)
+                result + (commandObject.errors)
             } else {
                 result
             }
@@ -37,7 +35,7 @@ trait ControllerEnhancer {
         } as List
 
         if (errors) {
-            render errors
+            respond errors, [formats:['json', 'xml']]
             return true
         }
 
