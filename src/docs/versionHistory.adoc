@@ -1,4 +1,8 @@
 == Version History
-
+* 1.0.1
+** Fixing issues:
+*** https://github.com/virtualdogbert/command/issues/2[Improvement use respond instead of as JSON]
+*** https://github.com/virtualdogbert/command/issues/1[create-command block built in grails create-command]
+*** James Kleeh contributed some documentation changes.
 * 1.0
 ** Initial Release including the ErrorsHandler annotation.

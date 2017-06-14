@@ -18,7 +18,7 @@ plugins {
     id "com.jfrog.bintray" version "1.2"
 }
 
-version "1.0"
+version "1.0.1"
 group "org.grails.plugins"
 
 apply plugin: 'maven-publish'
@@ -34,7 +34,7 @@ bintray {
     pkg {
         userOrg = 'virtualdogbert'
         repo = 'plugins'
-        name = "$project.group:$project.name"
+        name = "$project.name"
         issueTrackerUrl = "https://github.com/virtualdogbert/command/issues"
         vcsUrl = "https://github.com/virtualdogbert/command"
         websiteUrl = "https://virtualdogbert.github.io/command"
