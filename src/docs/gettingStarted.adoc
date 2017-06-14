@@ -3,17 +3,17 @@
 1. Add the following dependency:
 .build.gradle
 ----
-compile "org.grails.plugins:command:1.0.0"
+compile "org.grails.plugins:command:1.0.1"
 ----
 
 2. Run grails create-command:
 ----
-grails create-command <package>.<commandName>
+grails create-command-object <package>.<commandName>
 ----
 
 or for the default package
 ----
-grails create-command <commandName>
+grails create-command-object <commandName>
 ----
 
 3. If this is the first command you've created, refresh the Gradle build. This will add the command
