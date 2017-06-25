@@ -631,7 +631,7 @@ list sent to the error handler, but for each parameter you will have to include 
         List errors = commandObjects.inject([]) { result, commandObject -&gt;
 
             if (commandObject.hasErrors()) {
-                result + (commandObject.errors as JSON)
+                result + (commandObject.errors)
             } else {
                 result
             }
@@ -639,7 +639,8 @@ list sent to the error handler, but for each parameter you will have to include 
         } as List
 
         if (errors) {
-            render errors
+            response.status = Holders.config.getProperty('command.response.code', Integer, 409)
+            respond errors, [formats:['json', 'xml']]
             return true
         }
 
@@ -647,13 +648,16 @@ list sent to the error handler, but for each parameter you will have to include 
     }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>You can override the response code by setting <code>command.response.code</code> int your configuration.</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.1<br>
+Version 1.0.2<br>
 Last updated 2017-06-04 19:47:10 -04:00
 </div>
 </div>
