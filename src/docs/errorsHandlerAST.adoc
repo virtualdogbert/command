@@ -18,7 +18,7 @@ params.<Your parameter name here>.conversion.error = Your error massage for <You
 
     import com.virtualdogbert.ast.ErrorsHandler
     import grails.converters.JSON
-    
+
     @ErrorsHandler
     class TestController {
 
@@ -72,7 +72,7 @@ params.<Your parameter name here>.conversion.error = Your error massage for <You
         List errors = commandObjects.inject([]) { result, commandObject ->
 
             if (commandObject.hasErrors()) {
-                result + (commandObject.errors as JSON)
+                result + (commandObject.errors)
             } else {
                 result
             }
@@ -80,11 +80,14 @@ params.<Your parameter name here>.conversion.error = Your error massage for <You
         } as List
 
         if (errors) {
-            render errors
+            response.status = Holders.config.getProperty('command.response.code', Integer, 409)
+            respond errors, [formats:['json', 'xml']]
             return true
         }
 
         return false
     }
 ----
+
+You can override the response code by setting `command.response.code` int your configuration.
 
