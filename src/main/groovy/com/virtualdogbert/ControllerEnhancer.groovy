@@ -16,6 +16,7 @@
 package com.virtualdogbert
 
 import grails.artefact.Enhances
+import grails.util.Holders
 import org.grails.core.artefact.ControllerArtefactHandler
 /**
  * A trait for adding a default errorsHandler for dealing with command errors. Also the AST will  delete to this handler
@@ -23,6 +24,7 @@ import org.grails.core.artefact.ControllerArtefactHandler
  */
 @Enhances(ControllerArtefactHandler.TYPE)
 trait ControllerEnhancer {
+
     boolean errorsHandler(List commandObjects) {
         List errors = commandObjects.inject([]) { result, commandObject ->
 
@@ -35,6 +37,7 @@ trait ControllerEnhancer {
         } as List
 
         if (errors) {
+            response.status = Holders.config.getProperty('command.response.code', Integer, 409)
             respond errors, [formats:['json', 'xml']]
             return true
         }
