@@ -1,4 +1,7 @@
 == Version History
+* 1.0.2
+** Fixing issues:
+*** https://github.com/virtualdogbert/command/issues/4[Set response code for errors]
 * 1.0.1
 ** Fixing issues:
 *** https://github.com/virtualdogbert/command/issues/2[Improvement use respond instead of as JSON]
