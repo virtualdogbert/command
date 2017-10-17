@@ -1,4 +1,7 @@
 == Version History
+* 1.0.3
+** Fixing a typo in the CommandGrailsPlugin, not sure why it ever ran with this error.
+** Adding an AST transform for adding Validateable to all command objects
 * 1.0.2
 ** Fixing issues:
 *** https://github.com/virtualdogbert/command/issues/4[Set response code for errors]
