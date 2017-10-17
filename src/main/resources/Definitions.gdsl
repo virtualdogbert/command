@@ -1,0 +1,24 @@
+import com.intellij.patterns.PsiJavaPatterns
+import com.intellij.patterns.PlatformPatterns
+
+
+def mongoContext = context(
+        ctype: PsiJavaPatterns.psiClass().withName(PlatformPatterns.string().matches(/.*/))
+)
+
+contributor(mongoContext) {
+    def path = ""
+    try {
+        path = psiClass.containingFile.originalFile.virtualFile.path
+    } catch (Exception e) {}
+    
+    if (path =~ ".*/*grails-app/command/.*") {
+
+        method(name: 'getErrors', type: 'org.springframework.validation.Errors', params: [:])
+        method(name: 'hasErrors', type: 'java.lang.Boolean', params: [:])
+        method(name: 'clearErrors', type: 'void', params: [:])
+        method(name: 'validate', type: 'java.lang.Boolean', params: [:])
+        method(name: 'validate', type: 'java.lang.Boolean', params: [fieldsToValidate: List])
+
+    }
+}

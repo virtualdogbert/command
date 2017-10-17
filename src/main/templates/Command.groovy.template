@@ -1,7 +1,6 @@
 package ${packageName}
-import grails.validation.Validateable
 
-class ${className}Command implements Validateable {
+class ${className}Command {
 
 
     static constraints = {
