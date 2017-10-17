@@ -40,10 +40,12 @@ public class CommandASTTransformation extends AbstractASTTransformation {
         List<ClassNode> classes = sourceUnit.getAST().getClasses()
         CommandArtefactHandler handler = new CommandArtefactHandler()
 
-        classes.each{ ClassNode node->
+        classes.each { ClassNode node ->
 
-            if(handler.isArtefact(node)){
-                node.addInterface(new ClassNode(Validateable))
+            if (handler.isArtefact(node)) {
+                if (!node.interfaces*.name.contains('Validateable')) {
+                    node.addInterface(new ClassNode(Validateable))
+                }
             }
         }
     }
