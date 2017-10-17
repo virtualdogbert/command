@@ -17,14 +17,12 @@ package com.virtualdogbert
 
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
-import grails.validation.Validateable
 import groovy.transform.CompileStatic
-
 /**
  * This is a trait which could be used to give the Command objects more convention over configuration in the future.
  */
 @CompileStatic
-trait CommandEnhanced implements GrailsApplicationAware, Validateable {
+trait CommandEnhanced implements GrailsApplicationAware {
     private static GrailsCommandClass internalCommandArtefact
     GrailsApplication grailsApplication
 
