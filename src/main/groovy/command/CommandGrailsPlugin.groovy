@@ -79,7 +79,7 @@ This plugins give command objects a convention, and adds some error handling ann
     }
 
     void refreshCommands() {
-        grailsApplication.commandClasses..each { GrailsCommandClass commandClass ->
+        grailsApplication.commandClasses.each { GrailsCommandClass commandClass ->
             def clz = commandClass.clazz
             clz.grailsCommandClass = commandClass
 
