@@ -24,7 +24,7 @@ import groovy.transform.CompileStatic
 @CompileStatic
 trait CommandEnhanced implements GrailsApplicationAware {
     private static GrailsCommandClass internalCommandArtefact
-    GrailsApplication grailsApplication
+    transient GrailsApplication grailsApplication
 
 
     public static setGrailsCommandClass(GrailsCommandClass gcc) {
