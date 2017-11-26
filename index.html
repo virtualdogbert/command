@@ -426,12 +426,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#introduction">1. Introduction</a></li>
 <li><a href="#version-history">2. Version History</a></li>
-<li><a href="#getting-started">3. Getting Started</a>
+<li><a href="#getting-started">3. Getting Started</a></li>
+<li><a href="#optional-configuration">4. Optional Configuration</a>
 <ul class="sectlevel2">
-<li><a href="#example-application">3.1. Example application</a></li>
+<li><a href="#example-application">4.1. Example application</a></li>
 </ul>
 </li>
-<li><a href="#the-errorshandler-annotation">4. The @ErrorsHandler Annotation</a>
+<li><a href="#the-errorshandler-annotation">5. The @ErrorsHandler Annotation</a>
 <ul class="sectlevel4">
 <li><a href="#example-usage">Example Usage:</a></li>
 <li><a href="#code-injected-by-the-transformation-into-the-affected-actions">Code injected by the transformation into the affected actions:</a></li>
@@ -458,14 +459,30 @@ command objects.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>1.0.4</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Updating the plugin to include the cascade plugin, as it works well with this plugin.</p>
+</li>
+<li>
+<p>Adding GDSL if you decide to use the global transform and not explicitly have Validateable.</p>
+</li>
+<li>
+<p>Updating the controller enhancer so that you have a choice of respond or render to deal with conflicts with gson views.</p>
+</li>
+<li>
+<p>Making the GrailsApplication from the trait injector transient to play nice with the cascade plugin.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>1.0.3</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fixing a typo in the CommandGrailsPlugin, not sure why it ever ran with this error.</p>
-</li>
-<li>
-<p>Adding an AST transform for adding Validateable to all command objects</p>
+<p>This release, fixes a typo issue that I&#8217;m not sure how I didn&#8217;t catch, because in a different environment, the code didn&#8217;t run. I also added a Global AST going toward more convention over configuration, just need to figure out GDSL to round that out(next release).</p>
 </li>
 </ul>
 </div>
@@ -475,14 +492,7 @@ command objects.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fixing issues:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://github.com/virtualdogbert/command/issues/4">Set response code for errors</a></p>
-</li>
-</ul>
-</div>
+<p>Adding an appropriate 409 response code that can be overridden with a config change.</p>
 </li>
 </ul>
 </div>
@@ -537,7 +547,7 @@ command objects.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>compile "org.grails.plugins:command:1.0.1"</pre>
+<pre>compile "org.grails.plugins:command:1.0.4"</pre>
 </div>
 </div>
 <div class="olist arabic">
@@ -570,8 +580,42 @@ automate, and eliminate this step.</p>
 </li>
 </ol>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="optional-configuration">4. Optional Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are two option configurations, that you can set in your config(application.groovy,runtime,groovy,application.yml):</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>command.response.code - this allows you to set the response code used when validation fails for your command. The default is 409</p>
+</li>
+<li>
+<p>command.response.return - this determines for the default error handler, if it should return like:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>respond errors, [formats: ['json', 'xml']]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>render errors as JSON</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the default is true and uses the first example, but you may want to consider the second example if you are using GSON views.</p>
+</div>
 <div class="sect2">
-<h3 id="example-application">3.1. Example application</h3>
+<h3 id="example-application">4.1. Example application</h3>
 <div class="paragraph">
 <p><a href="https://github.com/virtualdogbert/test-command">GitHub testCommand</a></p>
 </div>
@@ -579,7 +623,7 @@ automate, and eliminate this step.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="the-errorshandler-annotation">4. The @ErrorsHandler Annotation</h2>
+<h2 id="the-errorshandler-annotation">5. The @ErrorsHandler Annotation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The @ErrorsHandler annotation injects a call to the default error handling method, which is injected by the plugin.
@@ -687,8 +731,8 @@ list sent to the error handler, but for each parameter you will have to include 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.3<br>
-Last updated 2017-06-04 19:47:10 -04:00
+Version 1.0.4<br>
+Last updated 2017-11-24 16:27:02 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
