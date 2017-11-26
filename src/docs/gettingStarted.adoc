@@ -3,7 +3,7 @@
 1. Add the following dependency:
 .build.gradle
 ----
-compile "org.grails.plugins:command:1.0.1"
+compile "org.grails.plugins:command:1.0.4"
 ----
 
 2. Run grails create-command:
@@ -20,6 +20,21 @@ grails create-command-object <commandName>
 folder to the source set. You can manually add the folder to the source set by right clicking on the folder,
 selecting "Mark Directory as", and selecting "Sources Root". In a future release I'll look for a better way to
 automate, and eliminate this step.
+
+== Optional Configuration
+There are two option configurations, that you can set in your config(application.groovy,runtime,groovy,application.yml):
+
+1. command.response.code - this allows you to set the response code used when validation fails for your command. The default is 409
+2. command.response.return - this determines for the default error handler, if it should return like:
+----
+respond errors, [formats: ['json', 'xml']]
+----
+or
+----
+render errors as JSON
+----
+
+the default is true and uses the first example, but you may want to consider the second example if you are using GSON views.
 
 === Example application
 

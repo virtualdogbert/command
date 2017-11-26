@@ -1,4 +1,13 @@
 == Version History
+* 1.0.4
+** Updating the plugin to include the cascade plugin, as it works well with this plugin.
+** Adding GDSL if you decide to use the global transform and not explicitly have Validateable.
+** Updating the controller enhancer so that you have a choice of respond or render to deal with conflicts with gson views.
+** Making the GrailsApplication from the trait injector transient to play nice with the cascade plugin.
+* 1.0.3
+** This release, fixes a typo issue that I'm not sure how I didn't catch, because in a different environment, the code didn't run. I also added a Global AST going toward more convention over configuration, just need to figure out GDSL to round that out(next release).
+* 1.0.2
+** Adding an appropriate 409 response code that can be overridden with a config change.
 * 1.0.1
 ** Fixing issues:
 *** https://github.com/virtualdogbert/command/issues/2[Improvement use respond instead of as JSON]
