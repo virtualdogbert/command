@@ -16,14 +16,21 @@
 package com.virtualdogbert
 
 import grails.artefact.Enhances
-import grails.util.Holders
+import grails.converters.JSON
 import org.grails.core.artefact.ControllerArtefactHandler
+import org.springframework.beans.factory.annotation.Value
+
 /**
  * A trait for adding a default errorsHandler for dealing with command errors. Also the AST will  delete to this handler
  * by default.
  */
 @Enhances(ControllerArtefactHandler.TYPE)
 trait ControllerEnhancer {
+    @Value('${command.response.code:409}')
+    int responseCode
+
+    @Value('${command.response.return:true}')
+    boolean returnAsRespond
 
     boolean errorsHandler(List commandObjects) {
         List errors = commandObjects.inject([]) { result, commandObject ->
@@ -37,8 +44,12 @@ trait ControllerEnhancer {
         } as List
 
         if (errors) {
-            response.status = Holders.config.getProperty('command.response.code', Integer, 409)
-            respond errors, [formats:['json', 'xml']]
+            response.status = responseCode
+            if (returnAsRespond) {
+                respond errors, [formats: ['json', 'xml']]
+            } else {
+                render errors as JSON
+            }
             return true
         }
 
