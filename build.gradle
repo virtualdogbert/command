@@ -76,7 +76,7 @@ dependencies {
     provided "org.grails:grails-web-boot"
     provided "org.grails:grails-dependencies"
     provided 'javax.servlet:javax.servlet-api:3.1.0'
-    compile group: 'com.github.adedayo.intellij.sdk', name: 'java-psi-api', version: '142.1'
+    compile 'org.grails.plugins:grails-cascade-validation:2.0.1'
 
     testCompile "org.grails:grails-plugin-testing"
 
