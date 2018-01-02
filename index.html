@@ -439,6 +439,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#default-error-handler-injected-into-all-controllers">Default error handler injected into all controllers:</a></li>
 </ul>
 </li>
+<li><a href="#additional-constraints">6. Additional Constraints</a>
+<ul class="sectlevel2">
+<li><a href="#white-list-and-constraint">6.1. White List And Constraint</a></li>
+<li><a href="#white-list-or-constraint">6.2. White List Or Constraint</a></li>
+<li><a href="#black-list-and-constraint">6.3. Black List And Constraint</a></li>
+<li><a href="#black-list-or-constraint">6.4. Black List OR Constraint</a></li>
+<li><a href="#not-matches-constraint">6.5. Not Matches Constraint</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -458,6 +467,39 @@ command objects.</p>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>2.0.0</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Removed autowired Grails Application from command object artifacts. This is a minor breaking change, but it is a good
+idea as it will cut down on unnecessary injection, which will reduce memory used for the command object.</p>
+</li>
+<li>
+<p>Added new built-in constraints for command/domain objects:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>notMatches - opposite of matches.</p>
+</li>
+<li>
+<p>blackListAnd - a black list of regexes, combined with AND.</p>
+</li>
+<li>
+<p>blackListOR - a black list of regexes, combined with OR.</p>
+</li>
+<li>
+<p>whiteListAnd - a white list of regexes, combined with AND.</p>
+</li>
+<li>
+<p>whiteListOR - a white list of regexes, combined with OR</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>1.0.4</p>
 <div class="ulist">
@@ -728,11 +770,223 @@ list sent to the error handler, but for each parameter you will have to include 
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="additional-constraints">6. Additional Constraints</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Command plugin adds 5 additional constraints that you can use to validate properties on command and domain objects.
+The errors returned can be overridden by overriding the default message codes in your i18n bundles.</p>
+</div>
+<div class="sect2">
+<h3 id="white-list-and-constraint">6.1. White List And Constraint</h3>
+<div class="paragraph">
+<p>This allows you to specify a list of regexes, and the value of the property must satisfy all of them, because the checks
+are combined with an AND like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">boolean validation = checks.inject(true){ boolean result, String check -&gt;
+    result &amp;&amp; propertyValue ==~ Pattern.compile(check)
+}
+
+if (!validation) {</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="example-usage-2">Example Usage:</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testWhiteListAnd
+
+    static constraints = {
+        testWhiteListAnd whiteListAnd:['(?:auto|initial)', '(?:initial|inherit|transparent)']
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="default-message-code">default message code:</h5>
+<div class="paragraph">
+<p>default.not.whiteListAnd.message</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="white-list-or-constraint">6.2. White List Or Constraint</h3>
+<div class="paragraph">
+<p>This allows you to specify a list of regexes, and the value of the property must satisfy one of the regexes in the list,
+because the checks are combined with an OR like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">boolean validation = checks.inject(false){ boolean result, String check -&gt;
+    result || propertyValue ==~ Pattern.compile(check)
+}
+
+if (!validation) {</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="example-usage-3">Example Usage:</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testWhiteListOr
+
+    static constraints = {
+        testWhiteListOR whiteListOr:['(?:auto|initial)', '(?:initial|inherit|transparent)']
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="default-message-code-2">default message code:</h5>
+<div class="paragraph">
+<p>default.not.whiteListOr.message</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="black-list-and-constraint">6.3. Black List And Constraint</h3>
+<div class="paragraph">
+<p>This allows you to specify a list of regexes, and the value of the property must not satisfy all of them, because the checks
+are combined with and AND like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">boolean validation = checks.inject(true){ boolean result, String check -&gt;
+    result &amp;&amp; !(propertyValue ==~ Pattern.compile(check))
+}
+
+if (!validation) {</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="example-usage-4">Example Usage:</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testBlackListAnd
+
+    static constraints = {
+        testBlackListAnd blackListAnd:['(?:auto|initial)', '(?:initial|inherit|transparent)']
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="default-message-code-3">default message code:</h5>
+<div class="paragraph">
+<p>default.not.whiteListAnd.message</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="black-list-or-constraint">6.4. Black List OR Constraint</h3>
+<div class="paragraph">
+<p>This allows you to specify a list of regexes, and the value of the property must not satisfy one of the regexes in the list,
+because the checks are combined with an OR like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">boolean validation = checks.inject(false){ boolean result, String check -&gt;
+    result || !(propertyValue ==~ Pattern.compile(check))
+}
+
+if (!validation) {</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="example-usage-5">Example Usage:</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testBlackListOR
+
+    static constraints = {
+        testBlackListOR blackListOr:['(?:auto|initial)', '(?:initial|inherit|transparent)']
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="default-message-code-4">default message code:</h5>
+<div class="paragraph">
+<p>default.not.whiteListAnd.message</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="not-matches-constraint">6.5. Not Matches Constraint</h3>
+<div class="paragraph">
+<p>This allows you to specify a regex, and if it does match you will get an error, the opposite of the built-in matches constraint.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">boolean validation = propertyValue ==~ Pattern.compile(check)
+
+//if the value matches the regex add an error
+if (validation) {</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="example-usage-6">Example Usage:</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testNotMatches
+
+    static constraints = {
+        testNotMatches notMatches:'(?:auto|initial)'
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="default-message-code-5">default message code:</h5>
+<div class="paragraph">
+<p>default.not.matches.message</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.4<br>
-Last updated 2017-11-24 16:27:02 -05:00
+Version 2.0.0<br>
+Last updated 2018-01-01 15:48:52 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
