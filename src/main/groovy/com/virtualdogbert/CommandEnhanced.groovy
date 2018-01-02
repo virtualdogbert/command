@@ -15,16 +15,13 @@
  */
 package com.virtualdogbert
 
-import grails.core.GrailsApplication
-import grails.core.support.GrailsApplicationAware
 import groovy.transform.CompileStatic
 /**
  * This is a trait which could be used to give the Command objects more convention over configuration in the future.
  */
 @CompileStatic
-trait CommandEnhanced implements GrailsApplicationAware {
+trait CommandEnhanced {
     private static GrailsCommandClass internalCommandArtefact
-    transient GrailsApplication grailsApplication
 
 
     public static setGrailsCommandClass(GrailsCommandClass gcc) {
