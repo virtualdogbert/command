@@ -6,3 +6,5 @@ include::gettingStarted.adoc[]
 
 include::errorsHandlerAST.adoc[]
 
+include::additionalConstraints.adoc[]
+

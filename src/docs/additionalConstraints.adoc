@@ -1,0 +1,162 @@
+== Additional Constraints
+
+The Command plugin adds 5 additional constraints that you can use to validate properties on command and domain objects.
+The errors returned can be overridden by overriding the default message codes in your i18n bundles.
+
+=== White List And Constraint
+This allows you to specify a list of regexes, and the value of the property must satisfy all of them, because the checks
+are combined with an AND like this:
+[source,groovy]
+----
+boolean validation = checks.inject(true){ boolean result, String check ->
+    result && propertyValue ==~ Pattern.compile(check)
+}
+
+if (!validation) {
+----
+
+===== Example Usage:
+[source,groovy]
+----
+package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testWhiteListAnd
+
+    static constraints = {
+        testWhiteListAnd whiteListAnd:['(?:auto|initial)', '(?:initial|inherit|transparent)']
+    }
+}
+----
+
+===== default message code:
+default.not.whiteListAnd.message
+
+=== White List Or Constraint
+This allows you to specify a list of regexes, and the value of the property must satisfy one of the regexes in the list,
+because the checks are combined with an OR like this:
+[source,groovy]
+----
+boolean validation = checks.inject(false){ boolean result, String check ->
+    result || propertyValue ==~ Pattern.compile(check)
+}
+
+if (!validation) {
+----
+
+===== Example Usage:
+[source,groovy]
+----
+package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testWhiteListOr
+
+    static constraints = {
+        testWhiteListOR whiteListOr:['(?:auto|initial)', '(?:initial|inherit|transparent)']
+    }
+}
+----
+
+===== default message code:
+default.not.whiteListOr.message
+
+=== Black List And Constraint
+This allows you to specify a list of regexes, and the value of the property must not satisfy all of them, because the checks
+are combined with and AND like this:
+[source,groovy]
+----
+boolean validation = checks.inject(true){ boolean result, String check ->
+    result && !(propertyValue ==~ Pattern.compile(check))
+}
+
+if (!validation) {
+----
+
+===== Example Usage:
+[source,groovy]
+----
+package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testBlackListAnd
+
+    static constraints = {
+        testBlackListAnd blackListAnd:['(?:auto|initial)', '(?:initial|inherit|transparent)']
+    }
+}
+----
+
+===== default message code:
+default.not.whiteListAnd.message
+
+=== Black List OR Constraint
+This allows you to specify a list of regexes, and the value of the property must not satisfy one of the regexes in the list,
+because the checks are combined with an OR like this:
+[source,groovy]
+----
+boolean validation = checks.inject(false){ boolean result, String check ->
+    result || !(propertyValue ==~ Pattern.compile(check))
+}
+
+if (!validation) {
+----
+
+===== Example Usage:
+[source,groovy]
+----
+package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testBlackListOR
+
+    static constraints = {
+        testBlackListOR blackListOr:['(?:auto|initial)', '(?:initial|inherit|transparent)']
+    }
+}
+----
+
+===== default message code:
+default.not.whiteListAnd.message
+
+=== Not Matches Constraint
+This allows you to specify a regex, and if it does match you will get an error, the opposite of the built-in matches constraint.
+[source,groovy]
+----
+boolean validation = propertyValue ==~ Pattern.compile(check)
+
+//if the value matches the regex add an error
+if (validation) {
+----
+
+===== Example Usage:
+[source,groovy]
+----
+package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String testNotMatches
+
+    static constraints = {
+        testNotMatches notMatches:'(?:auto|initial)'
+    }
+}
+----
+
+===== default message code:
+default.not.matches.message

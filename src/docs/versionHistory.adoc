@@ -1,4 +1,13 @@
 == Version History
+* 2.0.0
+** Removed autowired Grails Application from command object artifacts. This is a minor breaking change, but it is a good
+idea as it will cut down on unnecessary injection, which will reduce memory used for the command object.
+** Added new built-in constraints for command/domain objects:
+*** notMatches - opposite of matches.
+*** blackListAnd - a black list of regexes, combined with AND.
+*** blackListOR - a black list of regexes, combined with OR.
+*** whiteListAnd - a white list of regexes, combined with AND.
+*** whiteListOR - a white list of regexes, combined with OR
 * 1.0.4
 ** Updating the plugin to include the cascade plugin, as it works well with this plugin.
 ** Adding GDSL if you decide to use the global transform and not explicitly have Validateable.
