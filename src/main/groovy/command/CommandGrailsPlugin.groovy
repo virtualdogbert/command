@@ -5,6 +5,7 @@ import com.virtualdogbert.GrailsCommandClass
 import com.virtualdogbert.GrailsCommandFactory
 import com.virtualdogbert.constraint.BlackListAndConstraint
 import com.virtualdogbert.constraint.BlackListOrConstraint
+import com.virtualdogbert.constraint.NotMatchesConstraint
 import com.virtualdogbert.constraint.WhiteListAndConstraint
 import com.virtualdogbert.constraint.WhiteListOrConstraint
 import grails.plugins.Plugin
@@ -96,4 +97,6 @@ This plugins give command objects a convention, and adds some error handling ann
         ConstrainedProperty.registerNewConstraint(BlackListOrConstraint.BLACK_LIST_OR_CONSTRAINT, BlackListOrConstraint)
         ConstrainedProperty.registerNewConstraint(WhiteListAndConstraint.WHITE_LIST_AND_CONSTRAINT, WhiteListAndConstraint)
         ConstrainedProperty.registerNewConstraint(WhiteListOrConstraint.WHITE_LIST_OR_CONSTRAINT, WhiteListOrConstraint)
+        ConstrainedProperty.registerNewConstraint(NotMatchesConstraint.NOT_MATCHES_CONSTRAINT, NotMatchesConstraint)
+    }
 }
