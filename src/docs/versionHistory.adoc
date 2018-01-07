@@ -1,4 +1,6 @@
 == Version History
+* 2.0.1
+** Changed responseCode to errorHandlerResponseCode in ControllerEnhancer.groovy, so its not so generic.
 * 2.0.0
 ** Removed autowired Grails Application from command object artifacts. This is a minor breaking change, but it is a good
 idea as it will cut down on unnecessary injection, which will reduce memory used for the command object.

@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Value
 @Enhances(ControllerArtefactHandler.TYPE)
 trait ControllerEnhancer {
     @Value('${command.response.code:409}')
-    int responseCode
+    int errorHandlerResponseCode
 
     @Value('${command.response.return:true}')
     boolean returnAsRespond
@@ -44,12 +44,14 @@ trait ControllerEnhancer {
         } as List
 
         if (errors) {
-            response.status = responseCode
+            response.status = errorHandlerResponseCode
+
             if (returnAsRespond) {
                 respond errors, [formats: ['json', 'xml']]
             } else {
                 render errors as JSON
             }
+
             return true
         }
 
