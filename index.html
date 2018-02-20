@@ -468,6 +468,17 @@ command objects.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>3.0.0</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Added auto binding for url parameters to command objects, when using the default error handler.
+since this can break non default error handlers I bumped the version to 3.0.0.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>2.0.1</p>
 <div class="ulist">
 <ul>
@@ -599,7 +610,7 @@ idea as it will cut down on unnecessary injection, which will reduce memory used
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>compile "org.grails.plugins:command:1.0.4"</pre>
+<pre>compile "org.grails.plugins:command:2.0.2"</pre>
 </div>
 </div>
 <div class="olist arabic">
@@ -692,6 +703,15 @@ list sent to the error handler, but for each parameter you will have to include 
 <pre>params.&lt;Your parameter name here&gt;.conversion.error = Your error massage for &lt;Your parameter name&gt; had an error binding.</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Starting in 2.0.2 bound parameters, will be checked against Command objects. if a command object has a property of the same
+name as a bound parameter, and it&#8217;s values is not set, then the error handler will set that parameter to the value of the bound
+parameter. This is  a helpful workaround for URL parameters, which won&#8217;t be bound to command objects, if there is a body with parameters.
+<a href="https://github.com/grails/grails-core/issues/9707" class="bare">https://github.com/grails/grails-core/issues/9707</a></p>
+</div>
+<div class="paragraph">
+<p>Because of this change you will have to update any custom error handlers to take an additional map parameter.</p>
+</div>
 <div class="sect4">
 <h5 id="example-usage">Example Usage:</h5>
 <div class="listingblock">
@@ -745,7 +765,7 @@ list sent to the error handler, but for each parameter you will have to include 
 <h5 id="code-injected-by-the-transformation-into-the-affected-actions">Code injected by the transformation into the affected actions:</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">    if(errorsHandler( [&lt;every commandObject in the actions parameter list&gt;] )){ return null }</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">    if(errorsHandler( [&lt;every commandObject in the actions parameter list&gt;], Map allOtherParameters )){ return null }</code></pre>
 </div>
 </div>
 </div>
@@ -753,9 +773,15 @@ list sent to the error handler, but for each parameter you will have to include 
 <h5 id="default-error-handler-injected-into-all-controllers">Default error handler injected into all controllers:</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">    boolean errorsHandler(List commandObjects) {
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">    boolean errorsHandler(List commandObjects, Map otherParams = [:]) {
         List errors = commandObjects.inject([]) { result, commandObject -&gt;
 
+            otherParams.each { otherParam -&gt;
+                if(commandObject.hasProperty(otherParam.key) &amp;&amp; !commandObject."$otherParam.key"){
+                    commandObject."$otherParam.key" = otherParam.value
+                }
+
+            }
             if (commandObject.hasErrors()) {
                 result + (commandObject.errors)
             } else {
@@ -765,8 +791,14 @@ list sent to the error handler, but for each parameter you will have to include 
         } as List
 
         if (errors) {
-            response.status = Holders.config.getProperty('command.response.code', Integer, 409)
-            respond errors, [formats:['json', 'xml']]
+            response.status = errorHandlerResponseCode
+
+            if (returnAsRespond) {
+                respond errors, [formats: ['json', 'xml']]
+            } else {
+                render errors as JSON
+            }
+
             return true
         }
 
@@ -995,8 +1027,8 @@ class Test3Command implements  Validateable{
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.0.0<br>
-Last updated 2018-01-01 22:45:36 -05:00
+Version 3.0.0<br>
+Last updated 2018-01-07 12:24:22 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
