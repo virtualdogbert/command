@@ -11,6 +11,13 @@ list sent to the error handler, but for each parameter you will have to include 
 params.<Your parameter name here>.conversion.error = Your error massage for <Your parameter name> had an error binding.
 ----
 
+Starting in 2.0.2 bound parameters, will be checked against Command objects. if a command object has a property of the same
+name as a bound parameter, and it's values is not set, then the error handler will set that parameter to the value of the bound
+parameter. This is  a helpful workaround for URL parameters, which won't be bound to command objects, if there is a body with parameters.
+https://github.com/grails/grails-core/issues/9707
+
+Because of this change you will have to update any custom error handlers to take an additional map parameter.
+
 ===== Example Usage:
 [source,groovy]
 ----
@@ -62,15 +69,21 @@ params.<Your parameter name here>.conversion.error = Your error massage for <You
 ===== Code injected by the transformation into the affected actions:
 [source,groovy]
 ----
-    if(errorsHandler( [<every commandObject in the actions parameter list>] )){ return null }
+    if(errorsHandler( [<every commandObject in the actions parameter list>], Map allOtherParameters )){ return null }
 ----
 
 ===== Default error handler injected into all controllers:
 [source,groovy]
 ----
-    boolean errorsHandler(List commandObjects) {
+    boolean errorsHandler(List commandObjects, Map otherParams = [:]) {
         List errors = commandObjects.inject([]) { result, commandObject ->
 
+            otherParams.each { otherParam ->
+                if(commandObject.hasProperty(otherParam.key) && !commandObject."$otherParam.key"){
+                    commandObject."$otherParam.key" = otherParam.value
+                }
+
+            }
             if (commandObject.hasErrors()) {
                 result + (commandObject.errors)
             } else {
@@ -80,8 +93,14 @@ params.<Your parameter name here>.conversion.error = Your error massage for <You
         } as List
 
         if (errors) {
-            response.status = Holders.config.getProperty('command.response.code', Integer, 409)
-            respond errors, [formats:['json', 'xml']]
+            response.status = errorHandlerResponseCode
+
+            if (returnAsRespond) {
+                respond errors, [formats: ['json', 'xml']]
+            } else {
+                render errors as JSON
+            }
+
             return true
         }
 

@@ -3,7 +3,7 @@
 1. Add the following dependency:
 .build.gradle
 ----
-compile "org.grails.plugins:command:1.0.4"
+compile "org.grails.plugins:command:2.0.2"
 ----
 
 2. Run grails create-command:

@@ -1,4 +1,7 @@
 == Version History
+* 3.0.0
+** Added auto binding for url parameters to command objects, when using the default error handler.
+since this can break non default error handlers I bumped the version to 3.0.0.
 * 2.0.1
 ** Changed responseCode to errorHandlerResponseCode in ControllerEnhancer.groovy, so its not so generic.
 * 2.0.0

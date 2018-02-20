@@ -32,9 +32,15 @@ trait ControllerEnhancer {
     @Value('${command.response.return:true}')
     boolean returnAsRespond
 
-    boolean errorsHandler(List commandObjects) {
+    boolean errorsHandler(List commandObjects, Map otherParams = [:]) {
         List errors = commandObjects.inject([]) { result, commandObject ->
 
+            otherParams.each { otherParam ->
+                if(commandObject.hasProperty(otherParam.key) && !commandObject."$otherParam.key"){
+                    commandObject."$otherParam.key" = otherParam.value
+                }
+
+            }
             if (commandObject.hasErrors()) {
                 result + (commandObject.errors)
             } else {
