@@ -11,7 +11,7 @@ list sent to the error handler, but for each parameter you will have to include 
 params.<Your parameter name here>.conversion.error = Your error massage for <Your parameter name> had an error binding.
 ----
 
-Starting in 2.0.2 bound parameters, will be checked against Command objects. if a command object has a property of the same
+Starting in 3.0.0 bound parameters, will be checked against Command objects. if a command object has a property of the same
 name as a bound parameter, and it's values is not set, then the error handler will set that parameter to the value of the bound
 parameter. This is  a helpful workaround for URL parameters, which won't be bound to command objects, if there is a body with parameters.
 https://github.com/grails/grails-core/issues/9707
