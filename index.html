@@ -777,7 +777,7 @@ parameter. This is  a helpful workaround for URL parameters, which won&#8217;t b
         List errors = commandObjects.inject([]) { result, commandObject -&gt;
 
             otherParams.each { otherParam -&gt;
-                if(commandObject.hasProperty(otherParam.key) &amp;&amp; !commandObject."$otherParam.key"){
+                if(commandObject.hasProperty(otherParam.key) &amp;&amp; commandObject."$otherParam.key" == null){
                     commandObject."$otherParam.key" = otherParam.value
                 }
 
@@ -1028,7 +1028,7 @@ class Test3Command implements  Validateable{
 <div id="footer">
 <div id="footer-text">
 Version 3.0.1<br>
-Last updated 2018-02-19 23:19:38 -05:00
+Last updated 2018-02-20 21:26:54 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
