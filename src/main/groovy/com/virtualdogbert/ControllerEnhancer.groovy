@@ -36,7 +36,7 @@ trait ControllerEnhancer {
         List errors = commandObjects.inject([]) { result, commandObject ->
 
             otherParams.each { otherParam ->
-                if(commandObject.hasProperty(otherParam.key) && !commandObject."$otherParam.key"){
+                if(commandObject.hasProperty(otherParam.key) && commandObject."$otherParam.key" == null){
                     commandObject."$otherParam.key" = otherParam.value
                 }
 
