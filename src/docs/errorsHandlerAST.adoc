@@ -79,7 +79,7 @@ Because of this change you will have to update any custom error handlers to take
         List errors = commandObjects.inject([]) { result, commandObject ->
 
             otherParams.each { otherParam ->
-                if(commandObject.hasProperty(otherParam.key) && !commandObject."$otherParam.key"){
+                if(commandObject.hasProperty(otherParam.key) && commandObject."$otherParam.key" == null){
                     commandObject."$otherParam.key" = otherParam.value
                 }
 
