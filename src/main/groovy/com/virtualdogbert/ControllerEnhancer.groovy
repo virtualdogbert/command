@@ -41,7 +41,7 @@ trait ControllerEnhancer {
                 }
 
             }
-            if (commandObject.hasErrors()) {
+            if (!commandObject.validate()) {
                 result + (commandObject.errors)
             } else {
                 result
