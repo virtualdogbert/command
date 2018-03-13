@@ -1,4 +1,6 @@
 == Version History
+* 3.0.3
+** Fixing bug introduced in last version with the controller bound errors not having a validate method.
 * 3.0.2
 ** Fixing the default error handler for the audo binding in 3.0.0 to do a validate rather than checking hasErrors.
 * 3.0.0/3.0.1
