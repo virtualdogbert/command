@@ -1,5 +1,7 @@
 == Version History
-* 3.0.0
+* 3.0.2
+** Fixing the default error handler for the audo binding in 3.0.0 to do a validate rather than checking hasErrors.
+* 3.0.0/3.0.1
 ** Added auto binding for url parameters to command objects, when using the default error handler.
 since this can break non default error handlers I bumped the version to 3.0.0.
 * 2.0.1
