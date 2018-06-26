@@ -446,6 +446,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#black-list-and-constraint">6.3. Black List And Constraint</a></li>
 <li><a href="#black-list-or-constraint">6.4. Black List OR Constraint</a></li>
 <li><a href="#not-matches-constraint">6.5. Not Matches Constraint</a></li>
+<li><a href="#htmlenforce-constraint">6.6. htmlEnforce Constraint</a></li>
+<li><a href="#configuration">6.7. Configuration</a></li>
 </ul>
 </li>
 </ul>
@@ -467,6 +469,25 @@ command objects.</p>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>4.0.0</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Upgraded to work with Grails 3.3.x</p>
+</li>
+<li>
+<p>Added htmlEnforce constraint</p>
+</li>
+<li>
+<p>Added built-in version of cascade constraint until it&#8217;s updated.</p>
+</li>
+<li>
+<p>Updated the ErrorHandler annotation, found an issue when applying it at a class level, so now it ignores methods that start with $</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>3.0.3</p>
 <div class="ulist">
@@ -1042,13 +1063,58 @@ class Test3Command implements  Validateable{
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="htmlenforce-constraint">6.6. htmlEnforce Constraint</h3>
+<div class="paragraph">
+<p>This allows you to use the OWASP Html Sanitizer to validate an HTML string.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuration">6.7. Configuration</h3>
+<div class="paragraph">
+<p>By default the plugin sets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">html_sanitizer_policy= HtmlPolicy.POLICY_DEFINITION</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However you can override that in your application.groovy with your own policy definition.</p>
+</div>
+<div class="sect4">
+<h5 id="example-usage-7">Example Usage:</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String html
+
+    static constraints = {
+        html htmlEnforce: true
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="default-message-code-6">default message code:</h5>
+<div class="paragraph">
+<p>default.htmlEnforce.messagee</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.3<br>
-Last updated 2018-03-13 12:34:39 -04:00
+Version 4.0.0<br>
+Last updated 2018-03-13 12:36:04 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
