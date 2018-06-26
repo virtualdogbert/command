@@ -3,19 +3,18 @@ package command
 import com.virtualdogbert.CommandArtefactHandler
 import com.virtualdogbert.GrailsCommandClass
 import com.virtualdogbert.GrailsCommandFactory
-import com.virtualdogbert.constraint.BlackListAndConstraint
-import com.virtualdogbert.constraint.BlackListOrConstraint
-import com.virtualdogbert.constraint.NotMatchesConstraint
-import com.virtualdogbert.constraint.WhiteListAndConstraint
-import com.virtualdogbert.constraint.WhiteListOrConstraint
+import com.virtualdogbert.constraint.*
 import grails.plugins.Plugin
-import grails.validation.ConstrainedProperty
+import org.grails.datastore.gorm.validation.constraints.eval.ConstraintsEvaluator
+import org.grails.datastore.gorm.validation.constraints.eval.DefaultConstraintEvaluator
+import org.grails.datastore.gorm.validation.constraints.registry.ConstraintRegistry
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean
+import org.springframework.context.ApplicationContext
 
 class CommandGrailsPlugin extends Plugin {
 
     // the version or versions of Grails the plugin is designed for
-    def grailsVersion = "3.0.11 > *"
+    def grailsVersion = "3.3.0 > *"
 
     def watchedResources = "file:./grails-app/command/**/*Command.groovy"
 
@@ -93,10 +92,28 @@ This plugins give command objects a convention, and adds some error handling ann
     }
 
     void doWithApplicationContext() {
-        ConstrainedProperty.registerNewConstraint(BlackListAndConstraint.BLACK_LIST_AND_CONSTRAINT, BlackListAndConstraint)
-        ConstrainedProperty.registerNewConstraint(BlackListOrConstraint.BLACK_LIST_OR_CONSTRAINT, BlackListOrConstraint)
-        ConstrainedProperty.registerNewConstraint(WhiteListAndConstraint.WHITE_LIST_AND_CONSTRAINT, WhiteListAndConstraint)
-        ConstrainedProperty.registerNewConstraint(WhiteListOrConstraint.WHITE_LIST_OR_CONSTRAINT, WhiteListOrConstraint)
-        ConstrainedProperty.registerNewConstraint(NotMatchesConstraint.NOT_MATCHES_CONSTRAINT, NotMatchesConstraint)
+        registerCustomConstraints(applicationContext)
+    }
+
+    private void registerCustomConstraints(ApplicationContext ctx) {
+        //This method for registering constraints came from longwa
+        List<ConstraintRegistry> registries = []
+        DefaultConstraintEvaluator evaluator = ctx.getBean(ConstraintsEvaluator) as DefaultConstraintEvaluator
+
+        // Register with both the default constraint as well as the gorm registry (it's stupid that it needs both)
+        // Also the ConstraintsEvaluator evaluator constructs a new internal registry and doesn't seem to expose it
+        // so we are forced to invade it's privacy if we want custom constraints for Validateable instances.
+        registries << evaluator.constraintRegistry
+        registries << ctx.getBean("gormValidatorRegistry", ConstraintRegistry)
+
+        registries.each { ConstraintRegistry registry ->
+            registry.addConstraint(CascadeConstraint)
+            registry.addConstraint(BlackListAndConstraint)
+            registry.addConstraint(BlackListOrConstraint)
+            registry.addConstraint(WhiteListAndConstraint)
+            registry.addConstraint(WhiteListOrConstraint)
+            registry.addConstraint(NotMatchesConstraint)
+            registry.addConstraint(HtmlEnforceConstraint)
+        }
     }
 }

@@ -1,8 +1,9 @@
 package com.virtualdogbert.constraint
 
-import grails.validation.AbstractConstraint
-import grails.validation.ConstrainedProperty
+import grails.gorm.validation.ConstrainedProperty
 import groovy.transform.CompileStatic
+import org.grails.datastore.gorm.validation.constraints.AbstractConstraint
+import org.springframework.context.MessageSource
 import org.springframework.validation.Errors
 
 import java.util.regex.Pattern
@@ -17,22 +18,23 @@ class NotMatchesConstraint extends AbstractConstraint {
     static final String NOT_MATCHES_CONSTRAINT               = "notMatches"
     static final String DEFAULT_NOT_NOT_MATCHES_MESSAGE_CODE = "default.not.matches.message"
 
-    boolean supports(Class type) {
-        return type != null
-    }
+    NotMatchesConstraint(Class<?> constraintOwningClass, String constraintPropertyName, Object constraintParameter, MessageSource messageSource) {
+        super(constraintOwningClass, constraintPropertyName, constraintParameter, messageSource)
 
-    /**
-     * Sets the check string parameter, which will be compiled into a regex.
-     *
-     * @param constraintParameter sets the check parameter, which will be used as a regex for validating a constraint property.
-     */
-    void setParameter(Object constraintParameter) {
         if (!(constraintParameter instanceof String)) {
             throw new IllegalArgumentException("Parameter for constraint [$NOT_MATCHES_CONSTRAINT] of property [$constraintPropertyName] of class [$constraintOwningClass] must be a java.lang.String")
         }
 
         this.check = (String) constraintParameter
-        super.setParameter(constraintParameter)
+    }
+
+    @Override
+    protected Object validateParameter(Object constraintParameter) {
+        return constraintParameter
+    }
+
+    boolean supports(Class type) {
+        return type != null
     }
 
     String getName() {

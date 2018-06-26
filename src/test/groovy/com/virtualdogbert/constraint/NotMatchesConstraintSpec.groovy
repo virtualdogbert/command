@@ -9,10 +9,12 @@ class NotMatchesConstraintSpec extends Specification {
     NotMatchesConstraint notMatchesConstraint
 
     def setup() {
-        notMatchesConstraint = new NotMatchesConstraint()
-        notMatchesConstraint.setOwningClass(this.class)
-        notMatchesConstraint.propertyName = 'test'
-        notMatchesConstraint.setParameter('(?:auto|initial)')
+        notMatchesConstraint = new NotMatchesConstraint(
+                this.class,
+                'test',
+                '(?:auto|initial)',
+                null
+        )
     }
 
     void 'test notMatches valid'() {

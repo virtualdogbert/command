@@ -9,10 +9,12 @@ class BlackListAndConstraintSpec extends Specification {
     BlackListAndConstraint blackListAndConstraint
 
     def setup() {
-        blackListAndConstraint = new BlackListAndConstraint()
-        blackListAndConstraint.setOwningClass(this.class)
-        blackListAndConstraint.propertyName = 'test'
-        blackListAndConstraint.setParameter(['(?:auto|initial)', '(?:initial|inherit|transparent)'])
+        blackListAndConstraint = new BlackListAndConstraint(
+                this.class,
+                'test',
+                ['(?:auto|initial)', '(?:initial|inherit|transparent)'],
+                null
+        )
     }
 
     void 'test black list AND valid'() {

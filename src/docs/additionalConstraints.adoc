@@ -160,3 +160,36 @@ class Test3Command implements  Validateable{
 
 ===== default message code:
 default.not.matches.message
+
+
+=== htmlEnforce Constraint
+This allows you to use the OWASP Html Sanitizer to validate an HTML string.
+
+=== Configuration ===
+By default the plugin sets:
+[source,groovy]
+----
+html_sanitizer_policy= HtmlPolicy.POLICY_DEFINITION
+----
+
+However you can override that in your application.groovy with your own policy definition.
+
+===== Example Usage:
+[source,groovy]
+----
+package test.command
+
+import grails.validation.Validateable
+
+class Test3Command implements  Validateable{
+
+    String html
+
+    static constraints = {
+        html htmlEnforce: true
+    }
+}
+----
+
+===== default message code:
+default.htmlEnforce.messagee

@@ -1,4 +1,9 @@
 == Version History
+* 4.0.0
+** Upgraded to work with Grails 3.3.x
+** Added htmlEnforce constraint
+** Added builtin version of cascade constraint until it's updated.
+** Updated the ErrorHandler anotation, found an issue when applying it at a class level, so now it ignores methods that start with $
 * 3.0.3
 ** Fixing bug introduced in last version with the controller bound errors not having a validate method.
 * 3.0.2

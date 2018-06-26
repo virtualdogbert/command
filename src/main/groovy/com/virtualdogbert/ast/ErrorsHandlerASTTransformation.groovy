@@ -87,7 +87,7 @@ public class ErrorsHandlerASTTransformation extends AbstractASTTransformation {
         ClassNode SkipErrorsHandlerNode = new ClassNode(SkipErrorsHandler.class)
 
         if (fromClass &&
-            (methodNode.getAnnotations(ErrorHandlerNode)[0] || methodNode.getAnnotations(SkipErrorsHandlerNode)[0])) {
+            (methodNode.getAnnotations(ErrorHandlerNode)[0] || methodNode.getAnnotations(SkipErrorsHandlerNode)[0]) || methodNode.name.startsWith('$')) {
             return
             //If the annotation is from the class level, but the method node has it's own @ErrorsHandler annotation don't apply the class level logic.
         }

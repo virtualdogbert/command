@@ -1,8 +1,9 @@
 package com.virtualdogbert.constraint
 
-import grails.validation.AbstractConstraint
-import grails.validation.ConstrainedProperty
+import grails.gorm.validation.ConstrainedProperty
 import groovy.transform.CompileStatic
+import org.grails.datastore.gorm.validation.constraints.AbstractConstraint
+import org.springframework.context.MessageSource
 import org.springframework.validation.Errors
 
 import java.util.regex.Pattern
@@ -18,22 +19,23 @@ class WhiteListOrConstraint extends AbstractConstraint {
     static final String WHITE_LIST_OR_CONSTRAINT               = "whiteListOr"
     static final String DEFAULT_NOT_WHITE_LIST_OR_MESSAGE_CODE = "default.not.whiteListOr.message"
 
-    boolean supports(Class type) {
-        return type != null
-    }
+    WhiteListOrConstraint(Class<?> constraintOwningClass, String constraintPropertyName, Object constraintParameter, MessageSource messageSource) {
+        super(constraintOwningClass, constraintPropertyName, constraintParameter, messageSource)
 
-    /**
-     * Sets checks list based of the constraintParameter passed in. The constraintParameter must be a List of Strings.
-     *
-     * @param constraintParameter A list of Strings used by processValidate, as a white list of regexes.
-     */
-    void setParameter(Object constraintParameter) {
         if (!(constraintParameter instanceof List)) {
             throw new IllegalArgumentException("Parameter for constraint [$WHITE_LIST_OR_CONSTRAINT] of property [$constraintPropertyName] of class [$constraintOwningClass] must implement the interface [java.util.List]")
         }
 
         this.checks = (List<String>) constraintParameter
-        super.setParameter(constraintParameter)
+    }
+
+    @Override
+    protected Object validateParameter(Object constraintParameter) {
+        return constraintParameter
+    }
+
+    boolean supports(Class type) {
+        return type != null
     }
 
     String getName() {
@@ -50,7 +52,7 @@ class WhiteListOrConstraint extends AbstractConstraint {
      */
     protected void processValidate(Object target, Object propertyValue, Errors errors) {
         // Check that the value matches one of the regexes, in the list If not, add an error.
-        boolean validation = checks.inject(false){ boolean result, String check ->
+        boolean validation = checks.inject(false) { boolean result, String check ->
             result || propertyValue ==~ Pattern.compile(check)
         }
 

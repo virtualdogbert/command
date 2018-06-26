@@ -9,10 +9,12 @@ class WhiteListAndConstraintSpec extends Specification {
     WhiteListAndConstraint whiteListAndConstraint
 
     def setup() {
-        whiteListAndConstraint = new WhiteListAndConstraint()
-        whiteListAndConstraint.setOwningClass(this.class)
-        whiteListAndConstraint.propertyName = 'test'
-        whiteListAndConstraint.setParameter(['(?:auto|initial)', '(?:initial|inherit|transparent)'])
+        whiteListAndConstraint = new WhiteListAndConstraint(
+                this.class,
+                'test',
+                ['(?:auto|initial)', '(?:initial|inherit|transparent)'],
+                null
+        )
     }
 
     void 'test white list AND valid'() {

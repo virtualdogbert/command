@@ -9,10 +9,12 @@ class BlackListOrConstraintSpec extends Specification {
     BlackListOrConstraint blackListOrConstraint
 
     def setup() {
-        blackListOrConstraint = new BlackListOrConstraint()
-        blackListOrConstraint.setOwningClass(this.class)
-        blackListOrConstraint.propertyName = 'test'
-        blackListOrConstraint.setParameter(['(?:auto|initial)', '(?:initial|inherit|transparent)'])
+        blackListOrConstraint = new BlackListOrConstraint(
+                this.class,
+                'test',
+                ['(?:auto|initial)', '(?:initial|inherit|transparent)'],
+                null
+        )
     }
 
     void 'test black list OR valid'() {

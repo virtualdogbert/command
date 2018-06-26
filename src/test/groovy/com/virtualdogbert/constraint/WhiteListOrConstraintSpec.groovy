@@ -9,10 +9,12 @@ class WhiteListOrConstraintSpec extends Specification {
     WhiteListOrConstraint whiteListOrConstraint
 
     def setup() {
-        whiteListOrConstraint = new WhiteListOrConstraint()
-        whiteListOrConstraint.setOwningClass(this.class)
-        whiteListOrConstraint.propertyName = 'test'
-        whiteListOrConstraint.setParameter(['(?:auto|initial)', '(?:initial|inherit|transparent)'])
+        whiteListOrConstraint = new WhiteListOrConstraint(
+                this.class,
+                'test',
+                ['(?:auto|initial)', '(?:initial|inherit|transparent)'],
+                null
+        )
     }
 
     void 'test white list OR valid'() {

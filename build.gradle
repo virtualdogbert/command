@@ -14,21 +14,17 @@ buildscript {
 }
 
 plugins {
-    id "io.spring.dependency-management" version "0.5.4.RELEASE"
-    id "com.jfrog.bintray" version "1.2"
+    id 'com.jfrog.bintray' version '1.2'
 }
 
-version "3.0.3"
-group "org.grails.plugins"
+version '4.0.0'
+group 'org.grails.plugins'
 
-apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: "spring-boot"
-apply plugin: "org.grails.grails-plugin"
+apply plugin: 'org.grails.grails-plugin'
+apply plugin: 'org.grails.grails-plugin-publish'
 apply plugin: 'org.asciidoctor.convert'
-apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
-apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
 
 bintray {
     pkg {
@@ -76,9 +72,12 @@ dependencies {
     provided "org.grails:grails-web-boot"
     provided "org.grails:grails-dependencies"
     provided 'javax.servlet:javax.servlet-api:3.1.0'
-    compile 'org.grails.plugins:grails-cascade-validation:2.0.1'
+    compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20180219.1'
 
+    testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.grails:grails-plugin-testing"
+    testCompile "org.grails:grails-web-testing-support"
+    testCompile 'net.bytebuddy:byte-buddy-dep:1.8.12'
 
     console "org.grails:grails-console"
 }
@@ -87,6 +86,27 @@ sourceSets.main.java.srcDir new File(buildDir, "grails-app/command")
 
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
+}
+
+bootRun {
+    jvmArgs('-Dspring.output.ansi.enabled=always')
+    addResources = true
+    String springProfilesActive = 'spring.profiles.active'
+    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+}
+// enable if you wish to package this plugin as a standalone application
+bootRepackage.enabled = false
+
+grailsPublish {
+    user = 'user'
+    key = 'key'
+    githubSlug = 'command'
+    license {
+        name = 'Apache-2.0'
+    }
+    title = 'Command'
+    desc = 'A plugin to give command objects more convention, and extra constarints'
+    developers = [tpelletier: 'Tucker Pelletier']
 }
 
 def asciidoctorAttributes = [
@@ -127,7 +147,7 @@ task asciidoc(type: AsciidoctorTask, description: 'Generates single-page HTML, a
     backends 'html5', 'pdf'
 }
 
-task docs(dependsOn: [asciidoc]) << {
+task docs(dependsOn: [asciidoc]) {
 
     File dir = new File(buildDir, 'docs')
     ['pdf'].each { String ext ->
